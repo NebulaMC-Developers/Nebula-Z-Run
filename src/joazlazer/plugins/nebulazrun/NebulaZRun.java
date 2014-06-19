@@ -2,6 +2,7 @@ package joazlazer.plugins.nebulazrun;
 
 import java.util.ArrayList;
 
+import joazlazer.plugins.nebulazrun.minigame.MinigameState;
 import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
 
 import org.bukkit.ChatColor;
@@ -23,6 +24,10 @@ public class NebulaZRun extends JavaPlugin  {
 	@Override
 	public void onEnable() {
 		Config.loadFromFile(this);
+		minigames.add(new ZRunMinigame("ZRun1", MinigameState.IDLE));
+		minigames.add(new ZRunMinigame("ZRun2", MinigameState.DISABLED));
+		minigames.add(new ZRunMinigame("ZRun3", MinigameState.COUNTDOWN));
+		minigames.add(new ZRunMinigame("ZRun4", MinigameState.INGAME));
 	}
 	
 	@Override
@@ -84,8 +89,14 @@ public class NebulaZRun extends JavaPlugin  {
 	}
 	
 	public void displayZRunList(CommandSender sender) {
-		msg(sender, "Currently registered zrun minigame instances.");
+		msg(sender, ChatColor.AQUA + "Currently registered zrun minigame instances:");
 		for(int i = 0; i < minigames.size(); i++) {
+			ChatColor state = minigames.get(i).state.toColor();
+			String currentLine = "" + ChatColor.GOLD;
+			currentLine += "[" + i + "] ";
+			currentLine += state + "";
+			currentLine += minigames.get(i).name;
+			msg(sender, currentLine);
 			
 		}
 	}
