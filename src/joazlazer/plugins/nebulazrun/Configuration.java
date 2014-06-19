@@ -8,6 +8,6 @@ public class Configuration {
 	}
 	
 	public void saveToFile(JavaPlugin plugin) {
-		
+		// Test
 	}
 }
