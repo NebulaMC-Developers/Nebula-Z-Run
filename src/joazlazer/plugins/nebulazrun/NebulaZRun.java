@@ -1,5 +1,9 @@
 package joazlazer.plugins.nebulazrun;
 
+import java.util.ArrayList;
+
+import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -9,9 +13,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class NebulaZRun extends JavaPlugin  {
 	
 	public Configuration Config;
+	public ArrayList<ZRunMinigame> minigames;
 	
 	public NebulaZRun() {
 		Config = new Configuration();
+		minigames = new ArrayList<ZRunMinigame>();
 	}
 
 	@Override
@@ -37,16 +43,19 @@ public class NebulaZRun extends JavaPlugin  {
 		if(args.length <= 0) {
 			printAllCommands(sender);
 		}
-		else {
-			if(hasPerms(sender, args)) {
-				
+		else if(hasPerms(sender, args)) {
+			if(args[0].equalsIgnoreCase("list")) {
+				if(args.length == 1) {
+					displayZRunList(sender);
+				}
+				else displayError(sender, "Incorrect usage. Try /zrun list");
 			}
 		}
 	}
 	
 	public void printAllCommands(CommandSender s) {
 		msg(s, ChatColor.GRAY + repeat('-', 19) + "[" + ChatColor.DARK_PURPLE + "Nebula " + ChatColor.DARK_AQUA + "Z-Run" + ChatColor.GRAY + "]" + repeat('-', 20));
-		msg(s, formatHelp("yolo", "You only live once"));
+		msg(s, formatHelp("list", "Displays a list of all minigame instances."));
 	}
 	
 	public String repeat(char character, int times) {
@@ -71,5 +80,16 @@ public class NebulaZRun extends JavaPlugin  {
 	
 	public void msg(CommandSender sender, String message) {
 		sender.sendMessage(message);
+	}
+	
+	public void displayZRunList(CommandSender sender) {
+		msg(sender, "Currently registered zrun minigame instances.");
+		for(int i = 0; i < minigames.size(); i++) {
+			
+		}
+	}
+	
+	public void displayError(CommandSender sender, String text) {
+		msg(sender, ChatColor.RED + "Error: " + text);
 	}
 }
