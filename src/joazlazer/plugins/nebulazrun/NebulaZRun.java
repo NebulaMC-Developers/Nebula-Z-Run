@@ -2,6 +2,10 @@ package joazlazer.plugins.nebulazrun;
 
 import java.util.ArrayList;
 
+import joazlazer.plugins.nebulazrun.event.ChatExpectation;
+import joazlazer.plugins.nebulazrun.event.ChatHandler;
+import joazlazer.plugins.nebulazrun.event.EventHandler;
+import joazlazer.plugins.nebulazrun.event.MinigameRemoveConfirm;
 import joazlazer.plugins.nebulazrun.minigame.MinigameState;
 import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
 
@@ -9,12 +13,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NebulaZRun extends JavaPlugin  {
 	
 	public Configuration Config;
 	public ArrayList<ZRunMinigame> minigames;
+	public EventHandler Events;
+	public ChatHandler Chat;
 	
 	public NebulaZRun() {
 		Config = new Configuration();
@@ -24,6 +31,7 @@ public class NebulaZRun extends JavaPlugin  {
 	@Override
 	public void onEnable() {
 		Config.loadFromFile(this);
+		Events.registerEvents(this);
 		minigames.add(new ZRunMinigame("ZRun1", MinigameState.IDLE));
 		minigames.add(new ZRunMinigame("ZRun2", MinigameState.DISABLED));
 		minigames.add(new ZRunMinigame("ZRun3", MinigameState.COUNTDOWN));
@@ -42,19 +50,24 @@ public class NebulaZRun extends JavaPlugin  {
 			return true;
 		}
 		return false;
-		// A test
 	}
 	
 	public void parseCentralCommand(CommandSender sender, String[] args) {
 		if(args.length <= 0) {
 			printAllCommands(sender);
 		}
-		else if(hasPerms(sender, args)) {
-			if(args[0].equalsIgnoreCase("list")) {
+		else {
+			if(args[0].equalsIgnoreCase("list") && hasPerms(sender, args)) {
 				if(args.length == 1) {
 					displayZRunList(sender);
 				}
 				else displayError(sender, "Incorrect usage. Try /zrun list");
+			}
+			else if(args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("help")) {
+				printAllCommands(sender);
+			}
+			else if(args[0].equalsIgnoreCase("remove")) {
+				Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName())), (Player)sender);
 			}
 		}
 	}
@@ -93,7 +106,7 @@ public class NebulaZRun extends JavaPlugin  {
 		for(int i = 0; i < minigames.size(); i++) {
 			ChatColor state = minigames.get(i).state.toColor();
 			String currentLine = "" + ChatColor.GOLD;
-			currentLine += "[" + i + "] ";
+			currentLine += " [" + i + "] ";
 			currentLine += state + "";
 			currentLine += minigames.get(i).name;
 			msg(sender, currentLine);
@@ -103,5 +116,41 @@ public class NebulaZRun extends JavaPlugin  {
 	
 	public void displayError(CommandSender sender, String text) {
 		msg(sender, ChatColor.RED + "Error: " + text);
+	}
+	
+	public boolean cancelChat(AsyncPlayerChatEvent e) {
+		if(Chat.ExpectingUsernames.contains(e.getPlayer().getName())) {
+			for(int i = 0; i < Chat.Expectations.size(); i++) {
+				if(Chat.Expectations.get(i).username == e.getPlayer().getName()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void handleDirectedChat(AsyncPlayerChatEvent e) {
+		ChatExpectation expect = null;
+		for(int i = 0; i < Chat.Expectations.size(); i++) {
+			if(Chat.Expectations.get(i).username == e.getPlayer().getName()) {
+				expect = Chat.Expectations.get(i);
+			}
+		}
+		if(expect == null) return;
+		if(e.getMessage().equalsIgnoreCase("cancel")) {
+			expect.handleCancel(e.getPlayer());
+			return;
+		}
+		else {
+			for(int i = 0; i < expect.Expectations.length; i++) {
+				if(e.getMessage().equalsIgnoreCase(expect.Expectations[i])) {
+					expect.handleChat(e.getMessage(), e.getPlayer());
+				}
+			}
+		}
+	}
+	
+	public void handleChat(AsyncPlayerChatEvent e) {
+		
 	}
 }
