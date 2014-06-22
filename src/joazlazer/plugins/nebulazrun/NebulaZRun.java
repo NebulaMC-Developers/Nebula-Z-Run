@@ -76,10 +76,22 @@ public class NebulaZRun extends JavaPlugin  {
 			else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("-")) {
 				if(args.length >= 2) {
 					String arg = args[1];
-					if(sender instanceof Player) {
-						removeMinigameWithConfirm((Player)sender, minigames.get(0));
+					ZRunMinigame minigame = null;
+					if(isNumeric(arg)) {
+						minigame = minigames.get(Integer.parseInt(arg));
 					}
-					else removeMinigame(sender, minigames.get(0));
+					else if(containsName(minigames, arg)) {
+						minigame = getFromName(minigames, arg);
+					}
+					else {
+						sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>");
+					}
+					if(minigame != null) {
+						if(sender instanceof Player) {
+							removeMinigameWithConfirm((Player)sender, minigames.get(0));
+						}
+						else removeMinigame(sender, minigames.get(0));
+					}
 				}
 				else {
 					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>");
@@ -91,6 +103,21 @@ public class NebulaZRun extends JavaPlugin  {
 		}
 	}
 	
+	private boolean containsName(ArrayList<ZRunMinigame> minigames2, String arg) {
+		for(int i = 0; i < minigames2.size(); i++) {
+			if(minigames2.get(i).name == arg) return true;
+		}
+		return false;
+	}
+
+	private ZRunMinigame getFromName(ArrayList<ZRunMinigame> minigames2,
+			String arg) {
+		for(int i = 0; i < minigames2.size(); i++) {
+			if(minigames2.get(i).name == arg) return minigames2.get(i);
+		}
+		return null;
+	}
+
 	public void removeMinigameWithConfirm(CommandSender sender, ZRunMinigame minigame) {
 		sender.sendMessage(ChatColor.AQUA + "Are you sure you want to remove this minigame? Type yes, no, or cancel.");
 		PendingChange change = (new PendingChange()).setType(PendingChangeType.REMOVE).setNewObject(minigame).setChangeID("minigame_remove").setSender(sender);
@@ -208,4 +235,13 @@ public class NebulaZRun extends JavaPlugin  {
 			}
 		}
 	} 
+	
+	public boolean isNumeric(String text) {
+		boolean end = true;
+		for(int i = 0; i < text.length(); i++) {
+			if(Character.isDigit(text.charAt(i))) {}
+			else end = false;
+		}
+		return !end;
+	}
 }
