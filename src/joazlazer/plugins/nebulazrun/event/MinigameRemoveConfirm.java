@@ -1,10 +1,13 @@
 package joazlazer.plugins.nebulazrun.event;
 
+import joazlazer.plugins.nebulazrun.NebulaZRun;
+import joazlazer.plugins.nebulazrun.util.PendingChange;
+
 import org.bukkit.entity.Player;
 
 public class MinigameRemoveConfirm extends ChatExpectation {
 
-	public MinigameRemoveConfirm(String username) {
+	public MinigameRemoveConfirm(String username, NebulaZRun plugin, PendingChange removeChange) {
 		super(new String[] { "yes", "no" }, username);
 	}
 	

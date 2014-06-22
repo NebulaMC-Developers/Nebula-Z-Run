@@ -8,6 +8,9 @@ import joazlazer.plugins.nebulazrun.event.EventHandler;
 import joazlazer.plugins.nebulazrun.event.MinigameRemoveConfirm;
 import joazlazer.plugins.nebulazrun.minigame.MinigameState;
 import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
+import joazlazer.plugins.nebulazrun.util.PendingChange;
+import joazlazer.plugins.nebulazrun.util.PendingChangeQueue;
+import joazlazer.plugins.nebulazrun.util.PendingChangeType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,6 +25,7 @@ public class NebulaZRun extends JavaPlugin  {
 	public ArrayList<ZRunMinigame> minigames;
 	public EventHandler Events;
 	public ChatHandler Chat;
+	public PendingChangeQueue Changes;
 	
 	public NebulaZRun() {
 		Config = new Configuration();
@@ -67,7 +71,10 @@ public class NebulaZRun extends JavaPlugin  {
 				printAllCommands(sender);
 			}
 			else if(args[0].equalsIgnoreCase("remove")) {
-				Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName())), (Player)sender);
+				ZRunMinigame minigame = new ZRunMinigame();
+				PendingChange change = (new PendingChange()).setType(PendingChangeType.REMOVE).setNewObject(minigame);
+				Changes.enqueue(change);
+				Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName()), this, change), (Player)sender);
 			}
 		}
 	}
