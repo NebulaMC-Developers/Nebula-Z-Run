@@ -7,6 +7,8 @@ public class PendingChange {
     public Object newObject;
     public Object oldObject;
 	public Collection<? extends Object> containingCollection;
+	public String changeID;
+	public Object sender;
 	
 	public PendingChange setNewObject(Object par0) {
 		newObject = par0;
@@ -25,6 +27,16 @@ public class PendingChange {
 	
 	public PendingChange setType(PendingChangeType par0) {
 		type = par0;
+		return this;
+	}
+	
+	public PendingChange setChangeID(String id) {
+		changeID = id;
+		return this;
+	}
+	
+	public PendingChange setSender(Object sender) {
+		this.sender = sender;
 		return this;
 	}
 }

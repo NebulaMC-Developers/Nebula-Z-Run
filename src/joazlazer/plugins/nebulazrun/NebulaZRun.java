@@ -30,6 +30,9 @@ public class NebulaZRun extends JavaPlugin  {
 	public NebulaZRun() {
 		Config = new Configuration();
 		minigames = new ArrayList<ZRunMinigame>();
+		Events = new EventHandler(this);
+		Changes = new PendingChangeQueue();
+		Chat = new ChatHandler();
 	}
 
 	@Override
@@ -70,18 +73,40 @@ public class NebulaZRun extends JavaPlugin  {
 			else if(args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("help")) {
 				printAllCommands(sender);
 			}
-			else if(args[0].equalsIgnoreCase("remove")) {
-				ZRunMinigame minigame = new ZRunMinigame();
-				PendingChange change = (new PendingChange()).setType(PendingChangeType.REMOVE).setNewObject(minigame);
-				Changes.enqueue(change);
-				Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName()), this, change), (Player)sender);
+			else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("-")) {
+				if(args.length >= 2) {
+					String arg = args[1];
+					if(sender instanceof Player) {
+						removeMinigameWithConfirm((Player)sender, minigames.get(0));
+					}
+					else removeMinigame(sender, minigames.get(0));
+				}
+				else {
+					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>");
+				}
+			}
+			else {
+				sender.sendMessage(ChatColor.RED + "Unknown sub-command '" + args[0] + "'! Type /zrun to see a list of all of the sub-commands.");
 			}
 		}
+	}
+	
+	public void removeMinigameWithConfirm(CommandSender sender, ZRunMinigame minigame) {
+		sender.sendMessage(ChatColor.AQUA + "Are you sure you want to remove this minigame? Type yes, no, or cancel.");
+		PendingChange change = (new PendingChange()).setType(PendingChangeType.REMOVE).setNewObject(minigame).setChangeID("minigame_remove").setSender(sender);
+		Changes.enqueue(change);
+		Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName()), this, change), (Player)sender);
+	}
+	
+	public void removeMinigame(CommandSender sender, ZRunMinigame minigame) {
+		minigames.remove(minigame);
+		sender.sendMessage(ChatColor.GREEN + "Successfully removed minigame '" + minigame.name + ".'");
 	}
 	
 	public void printAllCommands(CommandSender s) {
 		msg(s, ChatColor.GRAY + repeat('-', 19) + "[" + ChatColor.DARK_PURPLE + "Nebula " + ChatColor.DARK_AQUA + "Z-Run" + ChatColor.GRAY + "]" + repeat('-', 20));
 		msg(s, formatHelp("list", "Displays a list of all minigame instances."));
+		msg(s, formatHelp("remove <[index]:[name]>", "Removes the specified minigame."));
 	}
 	
 	public String repeat(char character, int times) {
@@ -146,20 +171,41 @@ public class NebulaZRun extends JavaPlugin  {
 		if(expect == null) return;
 		if(e.getMessage().equalsIgnoreCase("cancel")) {
 			expect.handleCancel(e.getPlayer());
+			Chat.Expectations.remove(expect);
 			return;
 		}
 		else {
+			boolean found = false;
 			for(int i = 0; i < expect.Expectations.length; i++) {
 				if(e.getMessage().equalsIgnoreCase(expect.Expectations[i])) {
 					expect.handleChat(e.getMessage(), e.getPlayer());
+					Chat.Expectations.remove(expect);
+					found = true;
+				}
+			}
+			if(!found) {
+				if(expect.handleInvalid(e.getMessage(), e.getPlayer())) {
+					expect.handleReExpect(e.getMessage(), e.getPlayer());
+				}
+				else {
+					expect.handleCancel(e.getPlayer());
+					Chat.Expectations.remove(expect);
+					return;
 				}
 			}
 		}
 	}
 	
 	public void handleChat(AsyncPlayerChatEvent e) {
-		//MrPicastio made this 
 		
 	}
 	
+	public void consumeChange(PendingChange change) {
+		switch(change.changeID.toLowerCase()) {
+			case "minigame_remove": {
+				minigames.remove(change.newObject);
+				((CommandSender)change.sender).sendMessage(ChatColor.GREEN + "Successfully removed minigame '" + ((ZRunMinigame)change.newObject).name + ".'");
+			}
+		}
+	} 
 }

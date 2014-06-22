@@ -16,7 +16,7 @@ public class PlayerChatListener implements Listener{
 	@EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
 		if(_plugin.cancelChat(e)) {
-			e.isCancelled();
+			e.setCancelled(true);
 			_plugin.handleDirectedChat(e);
 		}
 		_plugin.handleChat(e);

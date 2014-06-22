@@ -24,4 +24,7 @@ public class ChatExpectation {
 	public boolean handleInvalid(String invalidText, Player sender) {
 		return true;
 	}
+	public void handleReExpect(String message, Player player) {
+		
+	}
 }
