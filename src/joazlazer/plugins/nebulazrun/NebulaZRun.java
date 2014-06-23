@@ -88,9 +88,9 @@ public class NebulaZRun extends JavaPlugin  {
 					}
 					if(minigame != null) {
 						if(sender instanceof Player) {
-							removeMinigameWithConfirm((Player)sender, minigames.get(0));
+							removeMinigameWithConfirm((Player)sender, minigame);
 						}
-						else removeMinigame(sender, minigames.get(0));
+						else removeMinigame(sender, minigame);
 					}
 				}
 				else {
