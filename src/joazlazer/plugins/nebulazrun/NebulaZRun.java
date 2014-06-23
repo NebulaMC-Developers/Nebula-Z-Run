@@ -242,6 +242,6 @@ public class NebulaZRun extends JavaPlugin  {
 			if(Character.isDigit(text.charAt(i))) {}
 			else end = false;
 		}
-		return !end;
+		return end;
 	}
 }
