@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 public class ChatExpectation {
 	public String[] Expectations;
 	public String username;
+	public boolean overrideDefault;
+	
 	public ChatExpectation(String [] expectations, String name) {
 		this.Expectations = expectations;
 		this.username = name;
@@ -24,7 +26,17 @@ public class ChatExpectation {
 	public boolean handleInvalid(String invalidText, Player sender) {
 		return true;
 	}
+	
 	public void handleReExpect(String message, Player player) {
 		
+	}
+	
+	public ChatExpectation setOverride(boolean override) {
+		overrideDefault = override;
+		return this;
+	}
+	
+	public boolean doHandle(String message, Player sender) {
+		return false;
 	}
 }

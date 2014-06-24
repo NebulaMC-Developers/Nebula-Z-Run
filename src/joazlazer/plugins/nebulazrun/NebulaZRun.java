@@ -1,11 +1,13 @@
 package joazlazer.plugins.nebulazrun;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import joazlazer.plugins.nebulazrun.event.ChatExpectation;
 import joazlazer.plugins.nebulazrun.event.ChatHandler;
 import joazlazer.plugins.nebulazrun.event.EventHandler;
 import joazlazer.plugins.nebulazrun.event.MinigameRemoveConfirm;
+import joazlazer.plugins.nebulazrun.minigame.MinigameCreationMode;
 import joazlazer.plugins.nebulazrun.minigame.MinigameState;
 import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
 import joazlazer.plugins.nebulazrun.util.PendingChange;
@@ -26,6 +28,7 @@ public class NebulaZRun extends JavaPlugin  {
 	public EventHandler Events;
 	public ChatHandler Chat;
 	public PendingChangeQueue Changes;
+	public HashMap<String, MinigameCreationMode> CreationModes;
 	
 	public NebulaZRun() {
 		Config = new Configuration();
@@ -33,6 +36,7 @@ public class NebulaZRun extends JavaPlugin  {
 		Events = new EventHandler(this);
 		Changes = new PendingChangeQueue();
 		Chat = new ChatHandler();
+		CreationModes = new HashMap<String, MinigameCreationMode>();
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class NebulaZRun extends JavaPlugin  {
 			if(args[0].equalsIgnoreCase("list") && hasPerms(sender, args)) {
 				if(args.length == 1) {
 					displayZRunList(sender);
-				}
+				} 
 				else displayError(sender, "Incorrect usage. Try /zrun list");
 			}
 			else if(args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("help")) {
@@ -78,13 +82,16 @@ public class NebulaZRun extends JavaPlugin  {
 					String arg = args[1];
 					ZRunMinigame minigame = null;
 					if(isNumeric(arg)) {
-						minigame = minigames.get(Integer.parseInt(arg));
+						if(minigames.size() > Integer.parseInt(arg))  {
+							minigame = minigames.get(Integer.parseInt(arg));
+						}
+						else sender.sendMessage("Invalid index '" + arg + "'!");
 					}
 					else if(containsName(minigames, arg)) {
 						minigame = getFromName(minigames, arg);
 					}
 					else {
-						sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>");
+						sender.sendMessage(ChatColor.RED + "Could not find minigame with name or index '" + arg + "'");
 					}
 					if(minigame != null) {
 						if(sender instanceof Player) {
@@ -94,7 +101,30 @@ public class NebulaZRun extends JavaPlugin  {
 					}
 				}
 				else {
-					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>");
+					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>"); 
+				}
+			}
+			else if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("new") || args[0].equalsIgnoreCase("+")) {
+				if(args.length == 1) {
+					if(sender instanceof Player) {
+						// Enable minigame creation mode.
+						MinigameCreationMode mode = new MinigameCreationMode(this, (Player)sender);
+						CreationModes.put(((Player)sender).getName(), mode);
+						mode.enable();
+					}
+					else {
+						sender.sendMessage(ChatColor.RED + "The console does not support minigame creation mode. Try /zrun add <name>");
+						return;
+					}
+				}
+				else {
+					// Parse the arguments and then create a new minigame with those properties.
+					try {
+						sender.sendMessage(ChatColor.GREEN + "Successfully added minigame called '" + args[2] + ".'");
+					}
+					catch(Exception ex) {
+						sender.sendMessage(ChatColor.RED + "An error ocurred while trying to add minigame called '" + args[2] + ".'");
+					}
 				}
 			}
 			else {
@@ -105,15 +135,14 @@ public class NebulaZRun extends JavaPlugin  {
 	
 	private boolean containsName(ArrayList<ZRunMinigame> minigames2, String arg) {
 		for(int i = 0; i < minigames2.size(); i++) {
-			if(minigames2.get(i).name == arg) return true;
+			if(minigames2.get(i).name.equalsIgnoreCase(arg)) return true;
 		}
 		return false;
 	}
 
-	private ZRunMinigame getFromName(ArrayList<ZRunMinigame> minigames2,
-			String arg) {
+	private ZRunMinigame getFromName(ArrayList<ZRunMinigame> minigames2, String arg) {
 		for(int i = 0; i < minigames2.size(); i++) {
-			if(minigames2.get(i).name == arg) return minigames2.get(i);
+			if(minigames2.get(i).name.equalsIgnoreCase(arg)) return minigames2.get(i);
 		}
 		return null;
 	}
@@ -133,7 +162,9 @@ public class NebulaZRun extends JavaPlugin  {
 	public void printAllCommands(CommandSender s) {
 		msg(s, ChatColor.GRAY + repeat('-', 19) + "[" + ChatColor.DARK_PURPLE + "Nebula " + ChatColor.DARK_AQUA + "Z-Run" + ChatColor.GRAY + "]" + repeat('-', 20));
 		msg(s, formatHelp("list", "Displays a list of all minigame instances."));
-		msg(s, formatHelp("remove <[index]:[name]>", "Removes the specified minigame."));
+		msg(s, formatHelp("remove <[index]:[name]>", "Removes the specified minigame.", "del, delete, -"));
+		msg(s, formatHelp("add", "Starts minigame creation mode.", "create, new, +"));
+		msg(s, formatHelp("add <name>", "Creates a minigame with the specified properties.", "create, new, +"));
 	}
 	
 	public String repeat(char character, int times) {
@@ -146,6 +177,10 @@ public class NebulaZRun extends JavaPlugin  {
 	
 	public String formatHelp(String expectedArgs, String description) {
 		return ChatColor.GOLD + " - " + ChatColor.GREEN + "/zrun " + expectedArgs + ChatColor.GOLD + " - " + description;
+	}
+	
+	public String formatHelp(String expectedArgs, String description, String aliases) {
+		return ChatColor.GOLD + " - " + ChatColor.GREEN + "/zrun " + expectedArgs + ChatColor.GOLD + " - " + ChatColor.GRAY + "Aliases: " + aliases + ChatColor.GOLD + " - " + description;
 	}
 	
 	public boolean hasPerms(CommandSender sender, String[] args) {
@@ -202,17 +237,30 @@ public class NebulaZRun extends JavaPlugin  {
 			return;
 		}
 		else {
-			boolean found = false;
-			for(int i = 0; i < expect.Expectations.length; i++) {
-				if(e.getMessage().equalsIgnoreCase(expect.Expectations[i])) {
-					expect.handleChat(e.getMessage(), e.getPlayer());
-					Chat.Expectations.remove(expect);
-					found = true;
+			if(!expect.overrideDefault) {
+				boolean found = false;
+				for(int i = 0; i < expect.Expectations.length; i++) {
+					if(e.getMessage().equalsIgnoreCase(expect.Expectations[i])) {
+						expect.handleChat(e.getMessage(), e.getPlayer());
+						Chat.Expectations.remove(expect);
+						found = true;
+					}
+				}
+				if(!found) {
+					if(expect.handleInvalid(e.getMessage(), e.getPlayer())) {
+						expect.handleReExpect(e.getMessage(), e.getPlayer());
+					}
+					else {
+						expect.handleCancel(e.getPlayer());
+						Chat.Expectations.remove(expect);
+						return;
+					}
 				}
 			}
-			if(!found) {
-				if(expect.handleInvalid(e.getMessage(), e.getPlayer())) {
-					expect.handleReExpect(e.getMessage(), e.getPlayer());
+			else {
+				if(expect.doHandle(e.getMessage(), e.getPlayer())) {
+					expect.handleChat(e.getMessage(), e.getPlayer());
+					Chat.Expectations.remove(expect);
 				}
 				else {
 					expect.handleCancel(e.getPlayer());
