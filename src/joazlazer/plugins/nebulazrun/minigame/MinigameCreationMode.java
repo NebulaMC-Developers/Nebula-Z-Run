@@ -25,15 +25,20 @@ public class MinigameCreationMode {
 
 	public void endName(String text) {
 		name = text;
-		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.RED + "disabled" + ChatColor.GRAY + ".");
+		end();
 	}
 
 	public void cancel() {
-		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.RED + "disabled" + ChatColor.GRAY + ".");
+		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.RED + "canceled" + ChatColor.GRAY + ".");
 	}
 
 	public void enable() {
 		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.GREEN + "enabled" + ChatColor.GRAY + ".");
 		startName();
+	}
+	
+	public void end() {
+		player.sendMessage(ChatColor.GREEN + "New minigame called '" + name + "' has been successfully created.");
+		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.RED + "disabled" + ChatColor.GRAY + ".");
 	}
 }

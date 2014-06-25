@@ -127,6 +127,54 @@ public class NebulaZRun extends JavaPlugin  {
 					}
 				}
 			}
+			else if(args[0].equalsIgnoreCase("enable")) {
+				if(args.length >= 2) {
+					String arg = args[1];
+					ZRunMinigame minigame = null;
+					if(isNumeric(arg)) {
+						if(minigames.size() > Integer.parseInt(arg))  {
+							minigame = minigames.get(Integer.parseInt(arg));
+						}
+						else sender.sendMessage("Invalid index '" + arg + "'!");
+					}
+					else if(containsName(minigames, arg)) {
+						minigame = getFromName(minigames, arg);
+					}
+					else {
+						sender.sendMessage(ChatColor.RED + "Could not find minigame with name or index '" + arg + "'");
+					}
+					if(minigame != null) {
+						enableMinigame(minigame, sender);
+					}
+				}
+				else {
+					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun enable <[index]:[name]>"); 
+				}
+			}
+			else if(args[0].equalsIgnoreCase("disable")) {
+				if(args.length >= 2) {
+					String arg = args[1];
+					ZRunMinigame minigame = null;
+					if(isNumeric(arg)) {
+						if(minigames.size() > Integer.parseInt(arg))  {
+							minigame = minigames.get(Integer.parseInt(arg));
+						}
+						else sender.sendMessage("Invalid index '" + arg + "'!");
+					}
+					else if(containsName(minigames, arg)) {
+						minigame = getFromName(minigames, arg);
+					}
+					else {
+						sender.sendMessage(ChatColor.RED + "Could not find minigame with name or index '" + arg + "'");
+					}
+					if(minigame != null) {
+						disableMinigame(minigame, sender);
+					}
+				}
+				else {
+					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun disable <[index]:[name]>"); 
+				}
+			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Unknown sub-command '" + args[0] + "'! Type /zrun to see a list of all of the sub-commands.");
 			}
@@ -165,6 +213,8 @@ public class NebulaZRun extends JavaPlugin  {
 		msg(s, formatHelp("remove <[index]:[name]>", "Removes the specified minigame.", "del, delete, -"));
 		msg(s, formatHelp("add", "Starts minigame creation mode.", "create, new, +"));
 		msg(s, formatHelp("add <name>", "Creates a minigame with the specified properties.", "create, new, +"));
+		msg(s, formatHelp("enable <[index]:[name]>", "Enables the specified minigame if disabled."));
+		msg(s, formatHelp("disable <[index]:[name]>", "Disabled the specified minigame if not already disabled.."));
 	}
 	
 	public String repeat(char character, int times) {
@@ -291,5 +341,31 @@ public class NebulaZRun extends JavaPlugin  {
 			else end = false;
 		}
 		return end;
+	}
+	
+	public void enableMinigame(ZRunMinigame m, CommandSender s) {
+		if(m != null) {
+			if(m.state == MinigameState.DISABLED) {
+				m.state = MinigameState.IDLE;
+				msg(s, ChatColor.GREEN + "The specified minigame is now enabled and idle.");
+			}
+			else msg(s, ChatColor.RED + "The specified minigame was already enabled.");
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	public void disableMinigame(ZRunMinigame m, CommandSender s) {
+		if(m != null) {
+			if(m.state != MinigameState.DISABLED) {
+				m.state = MinigameState.DISABLED;
+				msg(s, ChatColor.GREEN + "The specified minigame is now disabled.");
+			}
+			else msg(s, ChatColor.RED + "The specified minigame was already disabled.");
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 }
