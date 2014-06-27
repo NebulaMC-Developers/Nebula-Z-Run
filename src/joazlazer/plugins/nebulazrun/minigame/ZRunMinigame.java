@@ -1,5 +1,7 @@
 package joazlazer.plugins.nebulazrun.minigame;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 public class ZRunMinigame {
 	public ZRunMinigame() {
 		
@@ -16,4 +18,17 @@ public class ZRunMinigame {
 
 	public String name;
 	public MinigameState state;
+	
+	public void loadFromFile(ConfigurationSection currentSection) {
+		name = currentSection.getName();
+		if(currentSection.getBoolean("disabled", false)) state = MinigameState.DISABLED;
+		else state = MinigameState.IDLE;
+		System.out.println(currentSection.getBoolean("disabled"));
+		System.out.println(currentSection.getKeys(false).contains("disabled"));
+	}
+
+	public void saveToFile(ConfigurationSection currentSection) {
+		if(state == MinigameState.DISABLED) currentSection.set("disabled", true);
+		else currentSection.set("disabled", false);
+	}
 }
