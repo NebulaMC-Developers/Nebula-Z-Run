@@ -10,6 +10,10 @@ public class ZRunMinigame {
 		state = _state;
 	}
 	
+	public ZRunMinigame(String name2) {
+		name = name2;
+	}
+
 	public String name;
 	public MinigameState state;
 }

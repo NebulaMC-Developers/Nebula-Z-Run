@@ -10,11 +10,12 @@ public class MinigameCreationMode {
 	
 	public Player player;
 	public NebulaZRun plugin;
-	public String name;
+	public ZRunMinigame minigame;
 
 	public MinigameCreationMode(NebulaZRun nebulaZRun, Player sender) {
 		player = sender;
 		plugin = nebulaZRun;
+		minigame = new ZRunMinigame();
 	}
 	
 	public void startName() {
@@ -24,7 +25,7 @@ public class MinigameCreationMode {
 	}
 
 	public void endName(String text) {
-		name = text;
+		minigame.name = text;
 		end();
 	}
 
@@ -38,7 +39,8 @@ public class MinigameCreationMode {
 	}
 	
 	public void end() {
-		player.sendMessage(ChatColor.GREEN + "New minigame called '" + name + "' has been successfully created.");
+		plugin.addMinigame(minigame);
+		player.sendMessage(ChatColor.GREEN + "New minigame called '" + minigame.name + "' has been successfully created.");
 		player.sendMessage(ChatColor.GRAY + "Creation mode " + ChatColor.RED + "disabled" + ChatColor.GRAY + ".");
 	}
 }

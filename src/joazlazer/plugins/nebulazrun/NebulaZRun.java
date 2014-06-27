@@ -72,7 +72,7 @@ public class NebulaZRun extends JavaPlugin  {
 				if(args.length == 1) {
 					displayZRunList(sender);
 				} 
-				else displayError(sender, "Incorrect usage. Try /zrun list");
+				else displayError(sender, "Invalid usage. Try /zrun list");
 			}
 			else if(args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("help")) {
 				printAllCommands(sender);
@@ -101,7 +101,7 @@ public class NebulaZRun extends JavaPlugin  {
 					}
 				}
 				else {
-					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun remove <[index]:[name]>"); 
+					sender.sendMessage(ChatColor.RED + "Invalid usage. Try /zrun remove <[index]:[name]>"); 
 				}
 			}
 			else if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("new") || args[0].equalsIgnoreCase("+")) {
@@ -118,12 +118,21 @@ public class NebulaZRun extends JavaPlugin  {
 					}
 				}
 				else {
-					// Parse the arguments and then create a new minigame with those properties.
-					try {
-						sender.sendMessage(ChatColor.GREEN + "Successfully added minigame called '" + args[2] + ".'");
+					if(args.length == 2) {
+						// Parse the arguments and then create a new minigame with those properties.
+						try {
+							String name = args[1];
+							
+							ZRunMinigame m = new ZRunMinigame(name);
+							addMinigame(m);
+							sender.sendMessage(ChatColor.GREEN + "Successfully added minigame called '" + args[1] + ".'");
+						}
+						catch(Exception ex) {
+							sender.sendMessage(ChatColor.RED + "An error ocurred while trying to add minigame called '" + args[2] + ".'");
+						}
 					}
-					catch(Exception ex) {
-						sender.sendMessage(ChatColor.RED + "An error ocurred while trying to add minigame called '" + args[2] + ".'");
+					else {
+						sender.sendMessage(ChatColor.RED + "Invalid usage. Try /zrun add <name>");
 					}
 				}
 			}
@@ -181,14 +190,19 @@ public class NebulaZRun extends JavaPlugin  {
 		}
 	}
 	
-	private boolean containsName(ArrayList<ZRunMinigame> minigames2, String arg) {
+	public boolean containsName(ArrayList<ZRunMinigame> minigames2, String arg) {
 		for(int i = 0; i < minigames2.size(); i++) {
 			if(minigames2.get(i).name.equalsIgnoreCase(arg)) return true;
 		}
 		return false;
 	}
+	
+	public void addMinigame(ZRunMinigame minigame) {
+		this.minigames.add(minigame);
+		minigame.state = MinigameState.IDLE;
+	}
 
-	private ZRunMinigame getFromName(ArrayList<ZRunMinigame> minigames2, String arg) {
+	public ZRunMinigame getFromName(ArrayList<ZRunMinigame> minigames2, String arg) {
 		for(int i = 0; i < minigames2.size(); i++) {
 			if(minigames2.get(i).name.equalsIgnoreCase(arg)) return minigames2.get(i);
 		}
