@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.nebulamc.core.util.PendingChange;
+import com.nebulamc.core.util.PendingChangeQueue;
+import com.nebulamc.core.util.PendingChangeType;
 import com.nebulamc.nebulazrun.event.ChatExpectation;
 import com.nebulamc.nebulazrun.event.ChatHandler;
 import com.nebulamc.nebulazrun.event.EventHandler;
@@ -17,9 +20,6 @@ import com.nebulamc.nebulazrun.event.MinigameRemoveConfirm;
 import com.nebulamc.nebulazrun.minigame.MinigameCreationMode;
 import com.nebulamc.nebulazrun.minigame.MinigameState;
 import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
-import com.nebulamc.nebulazrun.util.PendingChange;
-import com.nebulamc.nebulazrun.util.PendingChangeQueue;
-import com.nebulamc.nebulazrun.util.PendingChangeType;
 
 public class NebulaZRun extends JavaPlugin  {
 	

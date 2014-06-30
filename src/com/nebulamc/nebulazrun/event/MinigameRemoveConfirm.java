@@ -3,9 +3,9 @@ package com.nebulamc.nebulazrun.event;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import com.nebulamc.core.util.PendingChange;
 import com.nebulamc.nebulazrun.NebulaZRun;
 import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
-import com.nebulamc.nebulazrun.util.PendingChange;
 
 public class MinigameRemoveConfirm extends ChatExpectation {
 	
