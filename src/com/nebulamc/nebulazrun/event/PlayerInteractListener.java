@@ -1,10 +1,10 @@
-package joazlazer.plugins.nebulazrun.event;
-
-import joazlazer.plugins.nebulazrun.NebulaZRun;
+package com.nebulamc.nebulazrun.event;
 
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import com.nebulamc.nebulazrun.NebulaZRun;
 
 public class PlayerInteractListener implements Listener {
 	

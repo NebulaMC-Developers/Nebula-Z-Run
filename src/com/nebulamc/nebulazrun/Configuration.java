@@ -1,10 +1,10 @@
-package joazlazer.plugins.nebulazrun;
+package com.nebulamc.nebulazrun;
 
 import java.util.Set;
 
-import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
-
 import org.bukkit.configuration.ConfigurationSection;
+
+import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
 
 public class Configuration {
 	public void loadFromFile(NebulaZRun plugin) {

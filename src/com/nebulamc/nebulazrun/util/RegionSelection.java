@@ -1,4 +1,4 @@
-package joazlazer.plugins.nebulazrun.util;
+package com.nebulamc.nebulazrun.util;
 
 public class RegionSelection {
 	public RegionSelection() {

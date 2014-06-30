@@ -1,4 +1,4 @@
-package joazlazer.plugins.nebulazrun.minigame;
+package com.nebulamc.nebulazrun.minigame;
 
 import org.bukkit.ChatColor;
 

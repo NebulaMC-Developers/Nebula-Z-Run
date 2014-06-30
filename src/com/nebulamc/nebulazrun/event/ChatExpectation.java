@@ -1,4 +1,4 @@
-package joazlazer.plugins.nebulazrun.event;
+package com.nebulamc.nebulazrun.event;
 
 import org.bukkit.entity.Player;
 

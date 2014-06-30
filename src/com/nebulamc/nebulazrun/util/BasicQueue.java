@@ -1,4 +1,4 @@
-package joazlazer.plugins.nebulazrun.util;
+package com.nebulamc.nebulazrun.util;
 
 import java.util.ArrayList;
 import java.util.Queue;

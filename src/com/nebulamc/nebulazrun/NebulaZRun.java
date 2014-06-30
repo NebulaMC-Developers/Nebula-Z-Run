@@ -1,18 +1,7 @@
-package joazlazer.plugins.nebulazrun;
+package com.nebulamc.nebulazrun;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import joazlazer.plugins.nebulazrun.event.ChatExpectation;
-import joazlazer.plugins.nebulazrun.event.ChatHandler;
-import joazlazer.plugins.nebulazrun.event.EventHandler;
-import joazlazer.plugins.nebulazrun.event.MinigameRemoveConfirm;
-import joazlazer.plugins.nebulazrun.minigame.MinigameCreationMode;
-import joazlazer.plugins.nebulazrun.minigame.MinigameState;
-import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
-import joazlazer.plugins.nebulazrun.util.PendingChange;
-import joazlazer.plugins.nebulazrun.util.PendingChangeQueue;
-import joazlazer.plugins.nebulazrun.util.PendingChangeType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,6 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.nebulamc.nebulazrun.event.ChatExpectation;
+import com.nebulamc.nebulazrun.event.ChatHandler;
+import com.nebulamc.nebulazrun.event.EventHandler;
+import com.nebulamc.nebulazrun.event.MinigameRemoveConfirm;
+import com.nebulamc.nebulazrun.minigame.MinigameCreationMode;
+import com.nebulamc.nebulazrun.minigame.MinigameState;
+import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
+import com.nebulamc.nebulazrun.util.PendingChange;
+import com.nebulamc.nebulazrun.util.PendingChangeQueue;
+import com.nebulamc.nebulazrun.util.PendingChangeType;
 
 public class NebulaZRun extends JavaPlugin  {
 	

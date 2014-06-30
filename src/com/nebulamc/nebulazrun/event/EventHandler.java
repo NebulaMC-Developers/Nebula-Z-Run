@@ -1,6 +1,6 @@
-package joazlazer.plugins.nebulazrun.event;
+package com.nebulamc.nebulazrun.event;
 
-import joazlazer.plugins.nebulazrun.NebulaZRun;
+import com.nebulamc.nebulazrun.NebulaZRun;
 
 public class EventHandler {
 	public PlayerChatListener chat;

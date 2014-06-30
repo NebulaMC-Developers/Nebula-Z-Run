@@ -1,11 +1,11 @@
-package joazlazer.plugins.nebulazrun.event;
-
-import joazlazer.plugins.nebulazrun.NebulaZRun;
-import joazlazer.plugins.nebulazrun.minigame.ZRunMinigame;
-import joazlazer.plugins.nebulazrun.util.PendingChange;
+package com.nebulamc.nebulazrun.event;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.nebulamc.nebulazrun.NebulaZRun;
+import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
+import com.nebulamc.nebulazrun.util.PendingChange;
 
 public class MinigameRemoveConfirm extends ChatExpectation {
 	

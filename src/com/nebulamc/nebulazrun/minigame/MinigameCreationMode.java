@@ -1,10 +1,10 @@
-package joazlazer.plugins.nebulazrun.minigame;
-
-import joazlazer.plugins.nebulazrun.NebulaZRun;
-import joazlazer.plugins.nebulazrun.event.MinigameCreateName;
+package com.nebulamc.nebulazrun.minigame;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.nebulamc.nebulazrun.NebulaZRun;
+import com.nebulamc.nebulazrun.event.MinigameCreateName;
 
 public class MinigameCreationMode {
 	

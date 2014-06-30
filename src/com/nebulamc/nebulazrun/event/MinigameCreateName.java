@@ -1,9 +1,9 @@
-package joazlazer.plugins.nebulazrun.event;
-
-import joazlazer.plugins.nebulazrun.NebulaZRun;
-import joazlazer.plugins.nebulazrun.minigame.MinigameCreationMode;
+package com.nebulamc.nebulazrun.event;
 
 import org.bukkit.entity.Player;
+
+import com.nebulamc.nebulazrun.NebulaZRun;
+import com.nebulamc.nebulazrun.minigame.MinigameCreationMode;
 
 public class MinigameCreateName extends ChatExpectation {
 	

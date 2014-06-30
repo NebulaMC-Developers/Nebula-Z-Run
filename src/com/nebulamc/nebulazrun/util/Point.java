@@ -1,4 +1,4 @@
-package joazlazer.plugins.nebulazrun.util;
+package com.nebulamc.nebulazrun.util;
 
 /**
  * A utility class that is designed to represent a three-dimensional point.

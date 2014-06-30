@@ -1,10 +1,10 @@
-package joazlazer.plugins.nebulazrun.event;
-
-import joazlazer.plugins.nebulazrun.NebulaZRun;
+package com.nebulamc.nebulazrun.event;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import com.nebulamc.nebulazrun.NebulaZRun;
 
 public class PlayerChatListener implements Listener{
 	private NebulaZRun _plugin;
