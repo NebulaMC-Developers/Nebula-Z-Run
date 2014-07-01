@@ -16,11 +16,10 @@ public class Configuration {
 	}
 	
 	public void saveMinigames(NebulaZRun plugin) {
-		ConfigurationSection minigameSection = plugin.getConfig().createSection("zrun.minigames");
 		for(int i = 0; i < plugin.minigames.size(); i++) {
-			ConfigurationSection currentSection = minigameSection.createSection(plugin.minigames.get(i).name);
-			plugin.minigames.get(i).saveToFile(currentSection);
+			plugin.minigames.get(i).saveToFile("zrun.minigames." + plugin.minigames.get(i).name, plugin.getConfig());
 		}
+		plugin.saveConfig();
 	}
 	
 	public void loadMinigames(NebulaZRun plugin) {

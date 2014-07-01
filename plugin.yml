@@ -1,0 +1,9 @@
+name: NebulaZRun
+main: com.nebulamc.nebulazrun.NebulaZRun
+version: 0.1
+description: A plugin that manages the minigame special to NebulaMC Z-Run.
+
+commands:
+  zrun:
+    description: Parent command for all Z-Run commands.
+    usage: /<command> [args]

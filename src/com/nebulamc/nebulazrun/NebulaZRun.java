@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.nebulamc.core.util.PendingChange;
-import com.nebulamc.core.util.PendingChangeQueue;
-import com.nebulamc.core.util.PendingChangeType;
+import com.nebulamc.core.util.Change;
+import com.nebulamc.core.util.ChangeQueue;
+import com.nebulamc.core.util.ChangeType;
 import com.nebulamc.nebulazrun.event.ChatExpectation;
 import com.nebulamc.nebulazrun.event.ChatHandler;
 import com.nebulamc.nebulazrun.event.EventHandler;
@@ -27,14 +27,14 @@ public class NebulaZRun extends JavaPlugin  {
 	public ArrayList<ZRunMinigame> minigames;
 	public EventHandler Events;
 	public ChatHandler Chat;
-	public PendingChangeQueue Changes;
+	public ChangeQueue Changes;
 	public HashMap<String, MinigameCreationMode> CreationModes;
 	
 	public NebulaZRun() {
 		Config = new Configuration();
 		minigames = new ArrayList<ZRunMinigame>();
 		Events = new EventHandler(this);
-		Changes = new PendingChangeQueue();
+		Changes = new ChangeQueue();
 		Chat = new ChatHandler();
 		CreationModes = new HashMap<String, MinigameCreationMode>();
 	}
@@ -43,10 +43,6 @@ public class NebulaZRun extends JavaPlugin  {
 	public void onEnable() {
 		Config.loadFromFile(this);
 		Events.registerEvents(this);
-		minigames.add(new ZRunMinigame("ZRun1", MinigameState.IDLE));
-		minigames.add(new ZRunMinigame("ZRun2", MinigameState.DISABLED));
-		minigames.add(new ZRunMinigame("ZRun3", MinigameState.COUNTDOWN));
-		minigames.add(new ZRunMinigame("ZRun4", MinigameState.INGAME));
 	}
 	
 	@Override
@@ -211,7 +207,7 @@ public class NebulaZRun extends JavaPlugin  {
 
 	public void removeMinigameWithConfirm(CommandSender sender, ZRunMinigame minigame) {
 		sender.sendMessage(ChatColor.AQUA + "Are you sure you want to remove this minigame? Type yes, no, or cancel.");
-		PendingChange change = (new PendingChange()).setType(PendingChangeType.REMOVE).setNewObject(minigame).setChangeID("minigame_remove").setSender(sender);
+		Change change = (new Change()).setType(ChangeType.REMOVE).setNewObject(minigame).setChangeID("minigame_remove").setSender(sender);
 		Changes.enqueue(change);
 		Chat.addChatExpectation(new MinigameRemoveConfirm((((Player)sender).getName()), this, change), (Player)sender);
 	}
@@ -229,6 +225,7 @@ public class NebulaZRun extends JavaPlugin  {
 		msg(s, formatHelp("add <name>", "Creates a minigame with the specified properties.", "create, new, +"));
 		msg(s, formatHelp("enable <[index]:[name]>", "Enables the specified minigame if disabled."));
 		msg(s, formatHelp("disable <[index]:[name]>", "Disabled the specified minigame if not already disabled.."));
+		msg(s, formatHelp("reload", "Stops all active games, removes all loaded minigames from memory, and reloads all minigames from file."));
 	}
 	
 	public String repeat(char character, int times) {
@@ -339,7 +336,7 @@ public class NebulaZRun extends JavaPlugin  {
 		
 	}
 	
-	public void consumeChange(PendingChange change) {
+	public void consumeChange(Change change) {
 		switch(change.changeID.toLowerCase()) {
 			case "minigame_remove": {
 				minigames.remove(change.newObject);

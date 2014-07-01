@@ -3,16 +3,16 @@ package com.nebulamc.nebulazrun.event;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.nebulamc.core.util.PendingChange;
+import com.nebulamc.core.util.Change;
 import com.nebulamc.nebulazrun.NebulaZRun;
 import com.nebulamc.nebulazrun.minigame.ZRunMinigame;
 
 public class MinigameRemoveConfirm extends ChatExpectation {
 	
 	NebulaZRun plugin;
-	PendingChange removeChange;
+	Change removeChange;
 
-	public MinigameRemoveConfirm(String username, NebulaZRun plugin, PendingChange removeChange) {
+	public MinigameRemoveConfirm(String username, NebulaZRun plugin, Change removeChange) {
 		super(new String[] { "yes", "no" }, username);
 		this.plugin = plugin;
 		this.removeChange = removeChange;

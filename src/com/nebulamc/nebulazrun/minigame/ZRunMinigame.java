@@ -1,6 +1,7 @@
 package com.nebulamc.nebulazrun.minigame;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ZRunMinigame {
 	public ZRunMinigame() {
@@ -27,8 +28,8 @@ public class ZRunMinigame {
 		System.out.println(currentSection.getKeys(false).contains("disabled"));
 	}
 
-	public void saveToFile(ConfigurationSection currentSection) {
-		if(state == MinigameState.DISABLED) currentSection.set("disabled", true);
-		else currentSection.set("disabled", false);
+	public void saveToFile(String string, FileConfiguration config) {
+		if(state == MinigameState.DISABLED) config.set(string + ".disabled", true);
+		else config.set(string + ".disabled", false);
 	}
 }
