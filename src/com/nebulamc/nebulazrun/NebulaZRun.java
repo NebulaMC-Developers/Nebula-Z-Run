@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nebulamc.core.util.Change;
@@ -196,6 +199,28 @@ public class NebulaZRun extends JavaPlugin  {
 					sender.sendMessage(ChatColor.RED + "Something went wrong when attempting to reload Z-Run.");
 				}
 			}
+			else if(args[0].equalsIgnoreCase("save")) {
+				Config.saveToFile(this);
+				sender.sendMessage(ChatColor.GREEN + "Successfully saved all objects in memory to the configuraton file.");
+			}
+			else if(args[0].equalsIgnoreCase("wand")) {
+				if(sender instanceof Player) {
+					Player player = (Player) sender;
+					ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);
+					ItemMeta wandMeta = wand.getItemMeta();
+					wandMeta.setDisplayName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Z-Run " + ChatColor.GRAY + "" + ChatColor.BOLD + "Wand");
+					ArrayList<String> wandLore = new ArrayList<String>();
+					wandLore.add(ChatColor.GRAY + "The wand for making both region and single-block");
+					wandLore.add(ChatColor.GRAY + "selections for use with Nebula Z-Run.");
+					wandMeta.setLore(wandLore);
+					wand.setItemMeta(wandMeta);
+					
+					player.getInventory().addItem(wand);
+				}
+				else {
+					msg(sender, ChatColor.RED + "Error: The console cannot recieve a Z-Run wand.");
+				}
+			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Unknown sub-command '" + args[0] + "'! Type /zrun to see a list of all of the sub-commands.");
 			}
@@ -242,6 +267,8 @@ public class NebulaZRun extends JavaPlugin  {
 		msg(s, formatHelp("enable <[index]:[name]>", "Enables the specified minigame if disabled."));
 		msg(s, formatHelp("disable <[index]:[name]>", "Disabled the specified minigame if not already disabled.."));
 		msg(s, formatHelp("reload", "Stops all active games, removes all loaded minigames from memory, and reloads all minigames from file."));
+		msg(s, formatHelp("save", "Saves all memory items to the configuration file."));
+		msg(s, formatHelp("wand", "Gives the player sender a z-run wand."));
 	}
 	
 	public String repeat(char character, int times) {

@@ -16,6 +16,7 @@ public class Configuration {
 	}
 	
 	public void saveMinigames(NebulaZRun plugin) {
+		plugin.getConfig().options().copyDefaults(true);
 		for(int i = 0; i < plugin.minigames.size(); i++) {
 			plugin.minigames.get(i).saveToFile("zrun.minigames." + plugin.minigames.get(i).name, plugin.getConfig());
 		}
