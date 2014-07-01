@@ -2,6 +2,7 @@ name: NebulaZRun
 main: com.nebulamc.nebulazrun.NebulaZRun
 version: 0.1
 description: A plugin that manages the minigame special to NebulaMC Z-Run.
+depend: [NebulaCore]
 
 commands:
   zrun:

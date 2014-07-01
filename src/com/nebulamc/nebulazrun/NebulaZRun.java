@@ -180,6 +180,22 @@ public class NebulaZRun extends JavaPlugin  {
 					sender.sendMessage(ChatColor.RED + "Invalid usage. Correct usage is /zrun disable <[index]:[name]>"); 
 				}
 			}
+			else if(args[0].equalsIgnoreCase("reload")) {
+				try {
+					Config = new Configuration();
+					minigames = new ArrayList<ZRunMinigame>();
+					Events = new EventHandler(this);
+					Changes = new ChangeQueue();
+					Chat = new ChatHandler();
+					CreationModes = new HashMap<String, MinigameCreationMode>();
+					Config.loadFromFile(this);
+					Events.registerEvents(this);
+					sender.sendMessage(ChatColor.GREEN + "Successfully reinitialized the plugin and reloaded everything from file.");
+				}
+				catch(Exception ex) {
+					sender.sendMessage(ChatColor.RED + "Something went wrong when attempting to reload Z-Run.");
+				}
+			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Unknown sub-command '" + args[0] + "'! Type /zrun to see a list of all of the sub-commands.");
 			}
